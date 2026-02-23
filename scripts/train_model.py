@@ -1,6 +1,9 @@
 """
 Скрипт обучения ML-модели классификации заявок.
 
+Не требует API_KEY или .env — только пути к данным (или аргументы).
+При сборке Docker вызывается без .env.
+
 Запуск из корня проекта:
   python scripts/train_model.py
 
@@ -9,6 +12,7 @@
 """
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -17,7 +21,6 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from app.config import Settings
 from app.ml import MLModel
 
 
@@ -27,13 +30,13 @@ def main() -> None:
         "--data",
         type=Path,
         default=None,
-        help="Путь к CSV с размеченными данными (по умолчанию из .env)",
+        help="Путь к CSV с размеченными данными",
     )
     parser.add_argument(
         "--output",
         type=Path,
         default=None,
-        help="Путь для сохранения модели (по умолчанию из .env)",
+        help="Путь для сохранения модели",
     )
     parser.add_argument(
         "--text-column",
@@ -49,9 +52,13 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    config = Settings()
-    data_path = args.data or config.labeled_data_path
-    model_path = args.output or config.ml_model_path
+    data_path = args.data or ROOT / os.getenv("LABELED_DATA_PATH", "data/labeled/labeled_requests.csv")
+    model_path = args.output or ROOT / os.getenv("ML_MODEL_PATH", "data/models/text_clf.pkl")
+    # Нормализуем пути (если заданы относительные — от ROOT)
+    if not data_path.is_absolute():
+        data_path = ROOT / data_path
+    if not model_path.is_absolute():
+        model_path = ROOT / model_path
 
     if not data_path.exists():
         print(f"Ошибка: файл с данными не найден: {data_path}")
