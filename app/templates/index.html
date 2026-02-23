@@ -33,16 +33,26 @@
     <div class="result">
         <h2>Результат</h2>
         <p><strong>Класс заявки:</strong> {{ label }}</p>
-        {% if confidence is defined and confidence is not none %}
-        <p><strong>Уверенность:</strong> {{ "%.2f"|format(confidence) }}</p>
-        {% endif %}
         <p><strong>Резюме для юриста:</strong><br>{{ summary or '—' }}</p>
         {% if summary and summary == '(не удалось сформировать резюме)' %}
         <p class="error" style="font-size: 0.9rem;">Резюме и поля не сформированы — проверьте <strong>API_KEY</strong> в .env на сервере и доступ к API (OpenAI или прокси). Подробности: <code>docker compose logs app</code>.</p>
         {% endif %}
-        {% if fields %}
-        <p><strong>Извлечённые поля:</strong></p>
-        <pre>{{ fields }}</pre>
+        {% if fields and fields.get('raw_response') is none and (fields.get('total_debt') is not none or fields.get('creditors_count') is not none or fields.get('has_overdue') is not none or fields.get('notes')) %}
+        <p><strong>Извлечённые данные:</strong></p>
+        <ul style="margin: 0.25rem 0; padding-left: 1.25rem;">
+            {% if fields.get('total_debt') is not none %}
+            <li><strong>Сумма долга:</strong> {{ "{:,.0f}".format(fields.total_debt).replace(",", " ") }} ₽</li>
+            {% endif %}
+            {% if fields.get('creditors_count') is not none %}
+            <li><strong>Количество кредиторов:</strong> {{ fields.creditors_count }}</li>
+            {% endif %}
+            {% if fields.get('has_overdue') is not none %}
+            <li><strong>Просрочки:</strong> {{ 'да' if fields.has_overdue else 'нет' }}</li>
+            {% endif %}
+            {% if fields.get('notes') %}
+            <li><strong>Примечание:</strong> {{ fields.notes }}</li>
+            {% endif %}
+        </ul>
         {% endif %}
     </div>
     {% endif %}
