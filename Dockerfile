@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Код и данные
 COPY app/ ./app/
 COPY scripts/ ./scripts/
-COPY run.py .
+COPY run.py wsgi.py ./
 COPY data/labeled/ ./data/labeled/
 RUN mkdir -p data/models
 
