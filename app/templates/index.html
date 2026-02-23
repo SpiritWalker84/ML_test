@@ -33,7 +33,7 @@
     <div class="result">
         <h2>Результат</h2>
         <p><strong>Класс заявки:</strong> {{ label }}</p>
-        {% if confidence is not none %}
+        {% if confidence is defined and confidence is not none %}
         <p><strong>Уверенность:</strong> {{ "%.2f"|format(confidence) }}</p>
         {% endif %}
         <p><strong>Резюме для юриста:</strong><br>{{ summary or '—' }}</p>

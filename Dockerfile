@@ -21,5 +21,7 @@ RUN python scripts/train_model.py
 ENV PORT=8082
 EXPOSE 8082
 
-# Переменные окружения передаются при запуске (docker run / compose)
-CMD ["python", "run.py"]
+# Gunicorn: 1 worker for small app; bind and workers overridable via env
+ENV GUNICORN_WORKERS=2
+ENV GUNICORN_THREADS=4
+CMD ["sh", "-c", "gunicorn -w ${GUNICORN_WORKERS:-2} -b 0.0.0.0:${PORT:-8082} --threads ${GUNICORN_THREADS:-4} wsgi:app"]

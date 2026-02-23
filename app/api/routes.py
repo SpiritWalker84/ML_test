@@ -10,7 +10,14 @@ def register_routes(app, analyzer_service: RequestAnalyzerService) -> None:
 
     @app.route("/", methods=["GET"])
     def index():
-        return render_template("index.html")
+        return render_template(
+            "index.html",
+            text="",
+            label=None,
+            confidence=None,
+            summary=None,
+            fields=None,
+        )
 
     @app.route("/analyze", methods=["POST"])
     def analyze_form():

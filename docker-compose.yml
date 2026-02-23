@@ -6,6 +6,7 @@ services:
     env_file: .env
     environment:
       - PORT=8082
+      - FLASK_DEBUG=0
       # SQLite in /app/db so we don't mount over /app/data (model lives there)
       - DATABASE_URL=sqlite:///./db/app.db
     volumes:
