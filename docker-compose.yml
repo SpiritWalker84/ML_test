@@ -6,6 +6,10 @@ services:
     env_file: .env
     environment:
       - PORT=8082
+      # SQLite in /app/db so we don't mount over /app/data (model lives there)
+      - DATABASE_URL=sqlite:///./db/app.db
     volumes:
-      # БД на хосте (сохраняется между перезапусками)
-      - ./data/app.db:/app/data/app.db
+      - app_db:/app/db
+
+volumes:
+  app_db:
