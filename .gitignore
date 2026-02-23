@@ -1,0 +1,25 @@
+# env
+.env
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pkl
+*.db
+
+# data (оставляем структуру; labeled_requests.csv — пример в репозитории)
+data/app.db
+data/models/*.pkl
+!data/models/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# extracted (временное)
+odt_extract/
+*.zip

@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8082:8082"
+    env_file: .env
+    environment:
+      - PORT=8082
+    volumes:
+      # БД на хосте (сохраняется между перезапусками)
+      - ./data/app.db:/app/data/app.db
