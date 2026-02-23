@@ -1,10 +1,13 @@
 """Клиент для работы с LLM API (OpenAI-совместимый, в т.ч. через прокси)."""
 
 import json
+import logging
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
 from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 
 class LLMClientBase(ABC):
@@ -43,7 +46,7 @@ class LLMClient(LLMClientBase):
             if resp.choices and len(resp.choices) > 0:
                 return (resp.choices[0].message.content or "").strip()
         except Exception as e:
-            print(f"LLM error: {e}")
+            logger.exception("LLM API call failed: %s", e)
         return None
 
     def summarize_request(self, text: str) -> str:

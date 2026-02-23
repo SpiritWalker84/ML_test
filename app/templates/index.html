@@ -37,6 +37,9 @@
         <p><strong>Уверенность:</strong> {{ "%.2f"|format(confidence) }}</p>
         {% endif %}
         <p><strong>Резюме для юриста:</strong><br>{{ summary or '—' }}</p>
+        {% if summary and summary == '(не удалось сформировать резюме)' %}
+        <p class="error" style="font-size: 0.9rem;">Резюме и поля не сформированы — проверьте <strong>API_KEY</strong> в .env на сервере и доступ к API (OpenAI или прокси). Подробности: <code>docker compose logs app</code>.</p>
+        {% endif %}
         {% if fields %}
         <p><strong>Извлечённые поля:</strong></p>
         <pre>{{ fields }}</pre>
